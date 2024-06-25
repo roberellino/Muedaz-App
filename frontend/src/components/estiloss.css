@@ -1,0 +1,22 @@
+.btn-custom {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.btn-custom i {
+    margin-right: 0.5rem;
+}
+
+.btn-print {
+    background-color: #007bff;
+    color: #ffffff;
+}
+
+.btn-delete {
+    background-color: #dc3545;
+    color: #ffffff;
+}
