@@ -9,7 +9,7 @@ const remitosRouter = require('./routes/remitos');
 const authRoutes = require('./routes/auth');
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.port || 5000;
 
 app.use(cors());
 app.use(bodyParser.json());
