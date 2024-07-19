@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "set GOOGLE_APPLICATION_CREDENTIALS=C:\\Users\\Robert\\Desktop\\Muedaz-App-main\\backend\\appmuedaz-firebase-adminsdk-w5t8f-5665b8b38f.json && node server.js",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
