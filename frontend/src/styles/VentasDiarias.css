@@ -1,0 +1,43 @@
+/* VentasDiarias.css */
+
+.container {
+  padding: 20px;
+  background-color: #f8f9fa;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.ventas-dia {
+  margin-bottom: 40px;
+}
+
+.btn-imprimir {
+  margin-bottom: 10px;
+}
+
+.table {
+  background-color: #ffffff;
+}
+
+.table th {
+  background-color: #343a40;
+  color: #ffffff;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(0, 123, 255, 0.05);
+}
+
+.table-hover tbody tr:hover {
+  background-color: rgba(0, 123, 255, 0.1);
+}
+
+.table-primary {
+  background-color: #007bff !important;
+  color: #ffffff;
+  font-weight: bold;
+}
