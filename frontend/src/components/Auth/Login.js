@@ -7,7 +7,7 @@ import { Form, Button, Container } from "react-bootstrap";
 import logo from "../../iconoMu.png";
 
 const apiUrl =
-  process.env.REACT_APP_API_URL || "https://muedaz-app-backend.vercel.app";
+  process.env.REACT_APP_API_URL || "https://muedaz-backend.vercel.app";
 
 const styles = {
   authContainer: {
@@ -71,7 +71,7 @@ const Login = ({ setToken }) => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "https://muedaz-app-backend.vercel.app/api/auth/login",
+        `${apiUrl}/api/auth/login`,
         { username, password }
       );
       setToken(response.data.token);
