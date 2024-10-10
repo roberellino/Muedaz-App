@@ -170,7 +170,6 @@ const handlePrint = async (remito) => {
               <Table striped bordered hover responsive className="mt-3 table-custom">
                 <thead>
                   <tr>
-                    <th>ID</th>
                     <th>Cliente</th>
                     <th>Fecha</th>
                     <th>Total</th>
@@ -181,7 +180,6 @@ const handlePrint = async (remito) => {
                   {filteredRemitos.length > 0 ? (
                     filteredRemitos.map((remito) => (
                       <tr key={remito.id}>
-                        <td>{remito.id}</td>
                         <td>
                           {clientes[remito.cliente] || "Cliente no encontrado"}
                         </td>
