@@ -95,39 +95,57 @@ const fetchProductoDetails = async (productoId) => {
   }
 };
 
-const handlePrint = async (remito) => {
+const handlePrint = (remito) => {
+    const doc = new jsPDF();
+    const fechaFormatted = moment(remito.createdAt).format("DD/MM/YYYY");
+  
+    // Reducir el tamaño de fuente para el texto principal
+    doc.setFontSize(10);
+    
+    // Información del cliente y fecha
+    doc.text(`${remito.cliente.nombre} (${remito.cliente.idCliente})`, 15, 25); 
+    doc.text(`${fechaFormatted}`, 15, 35);
+    doc.text(`${remito.cliente.telefono}                          ${remito.cliente.direccion}`, 15, 40); 
 
-  const productoDetails = await Promise.all(remito.productos.map(async (item) => {
-    const details = await fetchProductoDetails(item.producto);
-    return {
-      ...item,
-      productoDetails: details,
-    };
-  }));
-
-  const doc = new jsPDF();
-  doc.text(`Cliente: ${clientes[remito.cliente]}`, 20, 10);
-  doc.text(`Fecha: ${formatDate(remito.fecha)}`,20, 20);
-  doc.text("Productos:", 20, 30);
-
-  const productos = productoDetails.map((item) => [
-    item.productoDetails?.nombre || "Nombre no encontrado",
-    item.cantidad || 0,
-    item.productoDetails?.precio || 0,
-    item.cantidad * (item.productoDetails?.precio || 0),
-  ]);
-
-  doc.autoTable({
-    head: [["Producto", "Cantidad", "Precio Unitario", "Total"]],
-    body: productos,
-    startY: 35,
-  });
-
-  doc.text(`Total: $${remito.total}`, 20, doc.previousAutoTable.finalY + 10);
-
-
-  doc.save(`remito_${remito.id}.pdf`);
-};
+    // Mapeo de los productos
+    const productos = remito.productos.map((item) => [
+      item.producto.nombre,
+      item.cantidad,
+      item.producto.precio.toFixed(2), // Para asegurar que el precio tenga dos decimales
+      (item.cantidad * item.producto.precio).toFixed(2),
+    ]);
+  
+    // Tabla con estilo reducido
+    doc.autoTable({
+      head: [["Producto", "Cantidad", "Precio Unitario", "Total"]],
+      body: productos,
+      startY: 45,
+      theme: 'grid', // Mantiene las líneas divisorias
+      headStyles: {
+        fillColor: [255, 255, 255], // Fondo blanco para el encabezado
+        textColor: [0, 0, 0], // Texto negro
+        lineWidth: 0.5, // Grosor de las líneas
+        lineColor: [0, 0, 0], // Color de las líneas
+        fontSize: 8, // Tamaño de fuente reducido en el encabezado
+      },
+      bodyStyles: {
+        textColor: [0, 0, 0], // Texto negro en el cuerpo
+        lineWidth: 0.5, // Grosor de las líneas
+        lineColor: [0, 0, 0], // Color de las líneas
+        fontSize: 8, // Tamaño de fuente reducido en el cuerpo
+      },
+      styles: {
+        cellPadding: 2, // Espaciado reducido en las celdas
+      },
+    });
+  
+    // Total
+    doc.setFontSize(10); // Aseguramos que el total tenga un tamaño adecuado
+    doc.text(`Total: $${remito.total.toFixed(2)}`, 150, doc.previousAutoTable.finalY + 10);
+  
+    // Guardar el PDF
+    doc.save(`remito_${remito._id}.pdf`);
+  };
 
 
   const handleDelete = async (id) => {
