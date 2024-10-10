@@ -140,10 +140,10 @@ const handlePrint = (remito) => {
   
     // Total
     doc.setFontSize(10); // Aseguramos que el total tenga un tamaño adecuado
-    doc.text(`Total: $${remito.total.toFixed(2)}`, 150, doc.previousAutoTable.finalY + 10);
+      doc.text(`Total: $${remito.total}`, 20, doc.previousAutoTable.finalY + 10);
   
     // Guardar el PDF
-    doc.save(`remito_${remito._id}.pdf`);
+    doc.save(`remito_${remito.id}.pdf`);
   };
 
 
