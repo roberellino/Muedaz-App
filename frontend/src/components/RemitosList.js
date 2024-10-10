@@ -108,13 +108,12 @@ const handlePrint = (remito) => {
     doc.text(`${remito.cliente.telefono}                          ${remito.cliente.direccion}`, 15, 40); 
 
     // Mapeo de los productos
-   const productos = remito.productos.map((item) => [
-      item.producto.nombre,
-      item.cantidad,
-      item.producto.precio,
-      item.cantidad * item.producto.precio,
-    ]);
-  
+  const productos = remito.productos.map((item) => [
+    item.productoDetails?.nombre || "Nombre no encontrado",
+    item.cantidad || 0,
+    item.productoDetails?.precio || 0,
+    item.cantidad * (item.productoDetails?.precio || 0),
+  ]);
     // Tabla con estilo reducido
     doc.autoTable({
       head: [["Producto", "Cantidad", "Precio Unitario", "Total"]],
