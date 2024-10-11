@@ -45,14 +45,21 @@ const RemitosList = () => {
         const clientesData = await Promise.all(clienteIds.map(async id => {
           try {
             const cliente = await axios.get(`${apiUrl}/api/clientes/${id}`);
-            return { id, nombre: cliente.data.data.nombre };
+            return { id,
+                    nombre: cliente.data.data.nombre,
+                    telefono: cliente.data.data.telefono,  // Asegúrate de que el dato exista en la respuesta
+                    direccion: cliente.data.data.direccion // Asegúrate de que el dato exista en la respuesta
+                   };
           } catch (error) {
             console.error(`Error al obtener datos del cliente ${id}:`, error);
-            return { id, nombre: "Desconocido" }; // Manejo de error para clientes
+            return { id, nombre: "Desconocido", telefono: "Desconocido", direccion: "Desconocido" }; // Manejo de errores
           }
         }));
-        const clientesMap = clientesData.reduce((acc, cliente) => ({ ...acc, [cliente.id]: cliente.nombre }), {});
-
+        const clientesMap = clientesData.reduce((acc, cliente) => ({
+          ...acc, 
+            [cliente.id]: cliente
+        }), {});
+        
         setRemitos(remitosWithValidDates);
         setClientes(clientesMap);
       } catch (error) {
@@ -107,9 +114,13 @@ const fechaFormatted = moment(remito.createdAt).format("DD/MM/YYYY");
   }));
 
   const doc = new jsPDF();
-  doc.text(`${clientes[remito.cliente]} (${remito.cliente.idCliente})`, 15, 25);
-  doc.text(`${fechaFormatted}`, 15, 35);
-  doc.text(`${remito.cliente.telefono}     ${remito.cliente.direccion}`, 15, 40);
+  //doc.text(`${clientes[remito.cliente]} (${remito.cliente.idCliente})`, 15, 25);
+  //doc.text(`${fechaFormatted}`, 15, 35);
+  //doc.text(`${remito.cliente.telefono}     ${remito.cliente.direccion}`, 15, 40);
+  const clienteData = clientes[remito.cliente] || {};
+doc.text(`${clienteData.nombre} (${remito.cliente})`, 15, 25);
+doc.text(`${fechaFormatted}`, 15, 35);
+doc.text(`${clienteData.telefono || "Teléfono no disponible"}     ${clienteData.direccion || "Dirección no disponible"}`, 15, 40);
   
   const productos = productoDetails.map((item) => [
     item.productoDetails?.nombre || "Nombre no encontrado",
