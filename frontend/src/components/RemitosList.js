@@ -16,24 +16,8 @@ const RemitosList = () => {
   const [filteredRemitos, setFilteredRemitos] = useState([]);
   const [searchMonthYear, setSearchMonthYear] = useState("");
   const [clientes, setClientes] = useState({});
-  useEffect(() => {
-    const fetchRemitos = async () => {
-      try {
-        const result = await axios.get(`${apiUrl}/api/remitos`);
-        // Convertir todas las fechas a objetos de fecha válidos
-        const remitosWithValidDates = result.data.map((remito) => ({
-          ...remito,
-          fecha: new Date(remito.createdAt),
-        }));
-        setRemitos(remitosWithValidDates);
-      } catch (error) {
-        console.error("Error al obtener los remitos:", error);
-      }
-    };
-
-    fetchRemitos();
-  }, []);
-  /* useEffect(() => {
+ 
+   useEffect(() => {
     const fetchRemitos = async () => {
       try {
         const result = await axios.get(`${apiUrl}/api/remitos`);
@@ -85,7 +69,7 @@ const RemitosList = () => {
 
     fetchRemitos();
   }, []);
-   */
+  
   useEffect(() => {
     if (!searchMonthYear) {
       setFilteredRemitos(remitos);
