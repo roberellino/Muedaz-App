@@ -16,8 +16,24 @@ const RemitosList = () => {
   const [filteredRemitos, setFilteredRemitos] = useState([]);
   const [searchMonthYear, setSearchMonthYear] = useState("");
   const [clientes, setClientes] = useState({});
-
   useEffect(() => {
+    const fetchRemitos = async () => {
+      try {
+        const result = await axios.get(`${apiUrl}/api/remitos`);
+        // Convertir todas las fechas a objetos de fecha válidos
+        const remitosWithValidDates = result.data.map((remito) => ({
+          ...remito,
+          fecha: new Date(remito.createdAt),
+        }));
+        setRemitos(remitosWithValidDates);
+      } catch (error) {
+        console.error("Error al obtener los remitos:", error);
+      }
+    };
+
+    fetchRemitos();
+  }, []);
+  /* useEffect(() => {
     const fetchRemitos = async () => {
       try {
         const result = await axios.get(`${apiUrl}/api/remitos`);
@@ -69,7 +85,7 @@ const RemitosList = () => {
 
     fetchRemitos();
   }, []);
-
+   */
   useEffect(() => {
     if (!searchMonthYear) {
       setFilteredRemitos(remitos);
@@ -117,10 +133,9 @@ const fechaFormatted = moment(remito.createdAt).format("DD/MM/YYYY");
   //doc.text(`${clientes[remito.cliente]} (${remito.cliente.idCliente})`, 15, 25);
   //doc.text(`${fechaFormatted}`, 15, 35);
   //doc.text(`${remito.cliente.telefono}     ${remito.cliente.direccion}`, 15, 40);
- const clienteData = clientes[remito.cliente] || { nombre: "Desconocido", telefono: "", direccion: "" };
-doc.text(`${clienteData.nombre} (${clienteData.idCliente})`, 15, 25);
-doc.text(`${fechaFormatted}`, 15, 35);
-doc.text(`${clienteData.telefono || "Teléfono no disponible"}     ${clienteData.direccion || "Dirección no disponible"}`, 15, 38);
+doc.text(`${remito.cliente.nombre} (${remito.cliente.idCliente})`, 15, 25); 
+    doc.text(`${fechaFormatted}`, 15, 35);
+    doc.text(`${remito.cliente.telefono}                          ${remito.cliente.direccion}`, 15, 40); 
 
   
   const productos = productoDetails.map((item) => [
