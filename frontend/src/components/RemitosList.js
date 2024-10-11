@@ -96,7 +96,8 @@ const fetchProductoDetails = async (productoId) => {
 };
 
 const handlePrint = async (remito) => {
-
+  
+const fechaFormatted = moment(remito.createdAt).format("DD/MM/YYYY");
   const productoDetails = await Promise.all(remito.productos.map(async (item) => {
     const details = await fetchProductoDetails(item.producto);
     return {
@@ -106,10 +107,10 @@ const handlePrint = async (remito) => {
   }));
 
   const doc = new jsPDF();
-  doc.text(`Cliente: ${clientes[remito.cliente]}`, 20, 10);
-  doc.text(`Fecha: ${formatDate(remito.fecha)}`,20, 20);
-  doc.text("Productos:", 20, 30);
-
+  doc.text(`${clientes[remito.cliente]} (${clientes[remito.cliente.idCliente]})`, 15, 25);
+  doc.text(`${fechaFormatted}`, 15, 35);
+  doc.text(`${clientes[remito.cliente.telefono]}     ${clientes[remito.cliente.direccion]}`, 15, 45);
+  
   const productos = productoDetails.map((item) => [
     item.productoDetails?.nombre || "Nombre no encontrado",
     item.cantidad || 0,
@@ -117,13 +118,31 @@ const handlePrint = async (remito) => {
     item.cantidad * (item.productoDetails?.precio || 0),
   ]);
 
+   // Tabla con estilo reducido
   doc.autoTable({
     head: [["Producto", "Cantidad", "Precio Unitario", "Total"]],
     body: productos,
-    startY: 35,
+    startY: 45,
+    theme: 'grid', // Mantiene las líneas divisorias
+    headStyles: {
+      fillColor: [255, 255, 255], // Fondo blanco para el encabezado
+      textColor: [0, 0, 0], // Texto negro
+      lineWidth: 0.5, // Grosor de las líneas
+      lineColor: [0, 0, 0], // Color de las líneas
+      fontSize: 8, // Tamaño de fuente reducido en el encabezado
+    },
+    bodyStyles: {
+      textColor: [0, 0, 0], // Texto negro en el cuerpo
+      lineWidth: 0.5, // Grosor de las líneas
+      lineColor: [0, 0, 0], // Color de las líneas
+      fontSize: 8, // Tamaño de fuente reducido en el cuerpo
+    },
+    styles: {
+      cellPadding: 2, // Espaciado reducido en las celdas
+    },
   });
 
-  doc.text(`Total: $${remito.total}`, 20, doc.previousAutoTable.finalY + 10);
+  doc.text(`Total: $${remito.total}`, 150, doc.previousAutoTable.finalY + 10);
 
 
   doc.save(`remito_${remito.id}.pdf`);
