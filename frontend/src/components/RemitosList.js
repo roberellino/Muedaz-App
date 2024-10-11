@@ -117,9 +117,9 @@ const fechaFormatted = moment(remito.createdAt).format("DD/MM/YYYY");
   //doc.text(`${clientes[remito.cliente]} (${remito.cliente.idCliente})`, 15, 25);
   //doc.text(`${fechaFormatted}`, 15, 35);
   //doc.text(`${remito.cliente.telefono}     ${remito.cliente.direccion}`, 15, 40);
-doc.text(`${remito.cliente.nombre} (${remito.cliente.idCliente})`, 15, 25); 
+doc.text(`${clientes[remito.cliente.nombre]} (${clientes[remito.cliente.idCliente]})`, 15, 25); 
     doc.text(`${fechaFormatted}`, 15, 35);
-    doc.text(`${remito.cliente.telefono}                          ${remito.cliente.direccion}`, 15, 40); 
+    doc.text(`${clientes[remito.cliente.telefono]}                          ${clientes[remito.cliente.direccion]}`, 15, 38); 
 
   
   const productos = productoDetails.map((item) => [
