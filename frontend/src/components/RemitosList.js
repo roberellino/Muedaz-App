@@ -107,9 +107,9 @@ const fechaFormatted = moment(remito.createdAt).format("DD/MM/YYYY");
   }));
 
   const doc = new jsPDF();
-  doc.text(`${clientes[remito.cliente]} (${clientes[remito.cliente.idCliente]})`, 15, 25);
+  doc.text(`${clientes[remito.cliente]} (${remito.cliente.idCliente})`, 15, 25);
   doc.text(`${fechaFormatted}`, 15, 35);
-  doc.text(`${clientes[remito.cliente.telefono]}     ${clientes[remito.cliente.direccion]}`, 15, 45);
+  doc.text(`${remito.cliente.telefono}     ${remito.cliente.direccion}`, 15, 45);
   
   const productos = productoDetails.map((item) => [
     item.productoDetails?.nombre || "Nombre no encontrado",
