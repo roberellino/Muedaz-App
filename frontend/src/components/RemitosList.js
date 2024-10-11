@@ -45,14 +45,14 @@ const RemitosList = () => {
         const clientesData = await Promise.all(clienteIds.map(async id => {
           try {
             const cliente = await axios.get(`${apiUrl}/api/clientes/${id}`);
-            return { id,
+            return { idCliente: cliente.data.data.idCliente,
                     nombre: cliente.data.data.nombre,
                     telefono: cliente.data.data.telefono,  // Asegúrate de que el dato exista en la respuesta
                     direccion: cliente.data.data.direccion // Asegúrate de que el dato exista en la respuesta
                    };
           } catch (error) {
             console.error(`Error al obtener datos del cliente ${id}:`, error);
-            return { id, nombre: "Desconocido", telefono: "Desconocido", direccion: "Desconocido" }; // Manejo de errores
+            return { idCliente: "Desconocido", nombre: "Desconocido", telefono: "Desconocido", direccion: "Desconocido" }; // Manejo de errores
           }
         }));
         const clientesMap = clientesData.reduce((acc, cliente) => ({
@@ -118,7 +118,7 @@ const fechaFormatted = moment(remito.createdAt).format("DD/MM/YYYY");
   //doc.text(`${fechaFormatted}`, 15, 35);
   //doc.text(`${remito.cliente.telefono}     ${remito.cliente.direccion}`, 15, 40);
  const clienteData = clientes[remito.cliente] || { nombre: "Desconocido", telefono: "", direccion: "" };
-doc.text(`${clienteData.nombre} (${remito.cliente})`, 15, 25);
+doc.text(`${clienteData.nombre} (${clienteData.idCliente})`, 15, 25);
 doc.text(`${fechaFormatted}`, 15, 35);
 doc.text(`${clienteData.telefono || "Teléfono no disponible"}     ${clienteData.direccion || "Dirección no disponible"}`, 15, 38);
 
