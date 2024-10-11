@@ -45,14 +45,14 @@ const RemitosList = () => {
         const clientesData = await Promise.all(clienteIds.map(async id => {
           try {
             const cliente = await axios.get(`${apiUrl}/api/clientes/${id}`);
-            return { idCliente: cliente.data.data.idCliente,
+            return { id, idCliente: cliente.data.data.idCliente,
                     nombre: cliente.data.data.nombre,
                     telefono: cliente.data.data.telefono,  // Asegúrate de que el dato exista en la respuesta
                     direccion: cliente.data.data.direccion // Asegúrate de que el dato exista en la respuesta
                    };
           } catch (error) {
             console.error(`Error al obtener datos del cliente ${id}:`, error);
-            return { idCliente: "Desconocido", nombre: "Desconocido", telefono: "Desconocido", direccion: "Desconocido" }; // Manejo de errores
+            return {id, idCliente: "Desconocido", nombre: "Desconocido", telefono: "Desconocido", direccion: "Desconocido" }; // Manejo de errores
           }
         }));
         const clientesMap = clientesData.reduce((acc, cliente) => ({
