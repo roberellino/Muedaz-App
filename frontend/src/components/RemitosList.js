@@ -45,20 +45,13 @@ const RemitosList = () => {
         const clientesData = await Promise.all(clienteIds.map(async id => {
           try {
             const cliente = await axios.get(`${apiUrl}/api/clientes/${id}`);
-            return { id, idCliente: cliente.data.data.idCliente,
-                    nombre: cliente.data.data.nombre,
-                    telefono: cliente.data.data.telefono,  // Asegúrate de que el dato exista en la respuesta
-                    direccion: cliente.data.data.direccion // Asegúrate de que el dato exista en la respuesta
-                   };
+             return { id, nombre: cliente.data.data.nombre };
           } catch (error) {
             console.error(`Error al obtener datos del cliente ${id}:`, error);
-            return {id, idCliente: "Desconocido", nombre: "Desconocido", telefono: "Desconocido", direccion: "Desconocido" }; // Manejo de errores
+            return { id, nombre: "Desconocido" }; // Manejo de error para clientes
           }
         }));
-        const clientesMap = clientesData.reduce((acc, cliente) => ({
-          ...acc, 
-            [cliente.id]: cliente
-        }), {});
+        const clientesMap = clientesData.reduce((acc, cliente) => ({ ...acc, [cliente.id]: cliente.nombre }), {});
         
         setRemitos(remitosWithValidDates);
         setClientes(clientesMap);
@@ -112,17 +105,12 @@ const fechaFormatted = moment(remito.createdAt).format("DD/MM/YYYY");
       productoDetails: details,
     };
   }));
-
-  const doc = new jsPDF();
-  //doc.text(`${clientes[remito.cliente]} (${remito.cliente.idCliente})`, 15, 25);
-  //doc.text(`${fechaFormatted}`, 15, 35);
-  //doc.text(`${remito.cliente.telefono}     ${remito.cliente.direccion}`, 15, 40);
-doc.text(`${clientes[remito.cliente.nombre]} (${clientes[remito.cliente.idCliente]})`, 15, 25); 
-    doc.text(`${fechaFormatted}`, 15, 35);
-    doc.text(`${clientes[remito.cliente.telefono]}                          ${clientes[remito.cliente.direccion]}`, 15, 38); 
+const doc = new jsPDF();
+  doc.text(`${clientes[remito.cliente]}`, 20, 10);
+  doc.text(`${fechaFormatted}`, 10, 20);
 
   
-  const productos = productoDetails.map((item) => [
+ const productos = productoDetails.map((item) => [
     item.productoDetails?.nombre || "Nombre no encontrado",
     item.cantidad || 0,
     item.productoDetails?.precio || 0,
