@@ -106,7 +106,7 @@ const fechaFormatted = moment(remito.createdAt).format("DD/MM/YYYY");
     };
   }));
 const doc = new jsPDF();
-  doc.text(`${clientes[remito.cliente]}`, 20, 10);
+  doc.text(`${clientes[remito.cliente]}`, 10, 10);
   doc.text(`${fechaFormatted}`, 10, 20);
 
   
