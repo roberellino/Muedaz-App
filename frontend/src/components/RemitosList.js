@@ -45,13 +45,24 @@ const RemitosList = () => {
         const clientesData = await Promise.all(clienteIds.map(async id => {
           try {
             const cliente = await axios.get(`${apiUrl}/api/clientes/${id}`);
-             return { id, nombre: cliente.data.data.nombre };
+             return { 
+                id, 
+                nombre: cliente.data.data.nombre,
+                idCliente: cliente.data.data.idCliente,
+                direccion: cliente.data.data.direccion, // Asegúrate de que estos campos existan en tu API
+                telefono: cliente.data.data.telefono 
+    };
           } catch (error) {
             console.error(`Error al obtener datos del cliente ${id}:`, error);
             return { id, nombre: "Desconocido" }; // Manejo de error para clientes
           }
         }));
-       const clientesMap = clientesData.reduce((acc, cliente) => ({ ...acc, [cliente.id]: cliente.nombre}), {});
+       const clientesMap = clientesData.reduce((acc, cliente) => ({ ...acc, [cliente.id]: {
+                nombre: cliente.nombre,
+                idCliente: cliente.idCliente,
+                direccion: cliente.direccion,
+                telefono: cliente.telefono
+              }}), {});
        
         setRemitos(remitosWithValidDates);
         setClientes(clientesMap);
@@ -109,7 +120,12 @@ const fechaFormatted = moment(remito.createdAt).format("DD/MM/YYYY");
 // Reducir el tamaño de fuente para el texto principal
     doc.setFontSize(14);
   
- doc.text(`${clientes[remito.cliente]} ${clientes[remito.cliente.idCliente]}`, 15, 15);
+ //doc.text(`${clientes[remito.cliente]} ${clientes[remito.cliente.idCliente]}`, 15, 15);
+  // Datos del cliente
+  const clienteData = clientes[remito.cliente] || {};
+  doc.text(`Cliente: ${clienteData.nombre}`, 15, 15);
+  doc.text(`Dirección: ${clienteData.direccion}`, 15, 25); // Mostrar la dirección
+  doc.text(`Teléfono: ${clienteData.telefono}`, 15, 35); // Mostrar el teléfono
   
   doc.text(`${fechaFormatted}`, 180, 15, { align: 'right' });
 
