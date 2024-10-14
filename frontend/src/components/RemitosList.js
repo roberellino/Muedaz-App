@@ -107,9 +107,9 @@ const handlePrint = async (remito) => {
 const doc = new jsPDF();
 const fechaFormatted = moment(remito.createdAt).format("DD/MM/YYYY");
 // Reducir el tamaño de fuente para el texto principal
-    doc.setFontSize(10);
+    doc.setFontSize(14);
   
-  doc.text(`${clientes[remito.cliente]}`, 10, 15);
+  doc.text(`${clientes[remito.cliente]}`, 15, 15);
   doc.text(`${fechaFormatted}`, 180, 15, { align: 'right' });
 
   
@@ -139,7 +139,7 @@ const fechaFormatted = moment(remito.createdAt).format("DD/MM/YYYY");
         lineColor: [0, 0, 0]        // Líneas negras
       },
     });
-  doc.setFontSize(10); // Aseguramos que el total tenga un tamaño adecuado
+  doc.setFontSize(14); // Aseguramos que el total tenga un tamaño adecuado
   doc.text(`Total: $${remito.total}`, 150, doc.previousAutoTable.finalY + 10);
 
 
