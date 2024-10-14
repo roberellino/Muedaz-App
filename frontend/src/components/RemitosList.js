@@ -109,16 +109,7 @@ const fechaFormatted = moment(remito.createdAt).format("DD/MM/YYYY");
 // Reducir el tamaño de fuente para el texto principal
     doc.setFontSize(14);
   
- // doc.text(`${clientes[remito.cliente]}`, 15, 15);
-  // Información del cliente (nombre, dirección y teléfono)
-  const clienteInfo = clientes[remito.cliente];
-  if (clienteInfo) {
-    doc.text(`${clienteInfo.nombre}`, 15, 15);  // Nombre del cliente
-    doc.text(`${clienteInfo.direccion}`, 15, 25);  // Dirección del cliente
-    doc.text(`${clienteInfo.telefono}`, 15, 35);  // Teléfono del cliente
-  } else {
-    doc.text("Cliente no encontrado", 15, 15);
-  }
+ doc.text(`${clientes[remito.cliente]} ${clientes[remito.cliente.idCliente]}`, 15, 15);
   
   doc.text(`${fechaFormatted}`, 180, 15, { align: 'right' });
 
