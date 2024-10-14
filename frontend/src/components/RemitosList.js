@@ -211,8 +211,8 @@ const fechaFormatted = moment(remito.createdAt).format("DD/MM/YYYY");
                     filteredRemitos.map((remito) => (
                       <tr key={remito.id}>
                         <td>
-                          {clientes[remito.cliente] || "Cliente no encontrado"}
-                        </td>
+                            {clientes[remito.cliente]?.nombre || "Cliente no encontrado"}
+                          </td>
                         <td>{formatDate(remito.fecha)}</td>
                         <td>
                           ${remito.total}
