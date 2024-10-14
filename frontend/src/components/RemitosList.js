@@ -119,9 +119,9 @@ const fechaFormatted = moment(remito.createdAt).format("DD/MM/YYYY");
  //doc.text(`${clientes[remito.cliente]} ${clientes[remito.cliente.idCliente]}`, 15, 15);
   // Datos del cliente
   const clienteData = clientes[remito.cliente] || { nombre: "Desconocido", direccion: "Desconocida", telefono: "Desconocido" };
-  doc.text(`Cliente: ${clienteData.nombre}`, 15, 15);
-  doc.text(`Dirección: ${clienteData.direccion}`, 15, 25);
-  doc.text(`Teléfono: ${clienteData.telefono}`, 15, 35);
+  doc.text(`${clienteData.nombre} (${clienteData.idCliente})`, 15, 15);
+  doc.text(`${clienteData.direccion}`, 15, 25);
+  doc.text(`${clienteData.telefono}`, 15, 35);
   
   doc.text(`${fechaFormatted}`, 180, 15, { align: 'right' });
 
