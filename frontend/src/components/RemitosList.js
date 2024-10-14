@@ -106,8 +106,8 @@ const fechaFormatted = moment(remito.createdAt).format("DD/MM/YYYY");
     };
   }));
 const doc = new jsPDF();
-  doc.text(`${clientes[remito.cliente]}`, 10, 10);
-  doc.text(`${fechaFormatted}`, 10, 20);
+  doc.text(`${clientes[remito.cliente]}`, 10, 15);
+  doc.text(`${fechaFormatted}`, 180, 15, { align: 'right' });
 
   
  const productos = productoDetails.map((item) => [
@@ -118,29 +118,25 @@ const doc = new jsPDF();
   ]);
 
    // Tabla con estilo reducido
-  doc.autoTable({
-    head: [["Producto", "Cantidad", "Precio Unitario", "Total"]],
-    body: productos,
-    startY: 45,
-    theme: 'grid', // Mantiene las líneas divisorias
-    headStyles: {
-      fillColor: [255, 255, 255], // Fondo blanco para el encabezado
-      textColor: [0, 0, 0], // Texto negro
-      lineWidth: 0.5, // Grosor de las líneas
-      lineColor: [0, 0, 0], // Color de las líneas
-      fontSize: 8, // Tamaño de fuente reducido en el encabezado
-    },
-    bodyStyles: {
-      textColor: [0, 0, 0], // Texto negro en el cuerpo
-      lineWidth: 0.5, // Grosor de las líneas
-      lineColor: [0, 0, 0], // Color de las líneas
-      fontSize: 8, // Tamaño de fuente reducido en el cuerpo
-    },
-    styles: {
-      cellPadding: 2, // Espaciado reducido en las celdas
-    },
-  });
-
+ doc.autoTable({
+      head: [["Producto", "Cantidad", "Precio Unitario", "Total"]],
+      body: productos,
+      startY: 25,
+      theme: 'grid',
+      headStyles: {
+        fillColor: [255, 255, 255], // Fondo blanco para el encabezado
+        textColor: [0, 0, 0],       // Texto negro
+        lineWidth: 0.1,             // Líneas delgadas
+        lineColor: [0, 0, 0]        // Líneas negras
+      },
+      bodyStyles: {
+        //fillColor: [255, 255, 255], // Fondo blanco para el cuerpo
+        textColor: [0, 0, 0],       // Texto negro
+        lineWidth: 0.1,             // Líneas delgadas
+        lineColor: [0, 0, 0]        // Líneas negras
+      },
+    });
+  doc.setFontSize(10); // Aseguramos que el total tenga un tamaño adecuado
   doc.text(`Total: $${remito.total}`, 150, doc.previousAutoTable.finalY + 10);
 
 
