@@ -42,7 +42,7 @@ const RemitosList = () => {
 
         // Obtener nombres de clientes
         const clienteIds = [...new Set(remitosWithValidDates.map(remito => remito.cliente))];
-        const clientesData = await Promise.all(clienteIds.map(async id => {
+       /* const clientesData = await Promise.all(clienteIds.map(async id => {
           try {
             const cliente = await axios.get(`${apiUrl}/api/clientes/${id}`);
              return { id, nombre: cliente.data.data.nombre };
@@ -50,9 +50,30 @@ const RemitosList = () => {
             console.error(`Error al obtener datos del cliente ${id}:`, error);
             return { id, nombre: "Desconocido" }; // Manejo de error para clientes
           }
-        }));
-        const clientesMap = clientesData.reduce((acc, cliente) => ({ ...acc, [cliente.id]: cliente.nombre }), {});
-        
+        })); */
+        const clientesData = await Promise.all(clienteIds.map(async id => {
+  try {
+    const cliente = await axios.get(`${apiUrl}/api/clientes/${id}`);
+    return { 
+      id, 
+      nombre: cliente.data.data.nombre, 
+      direccion: cliente.data.data.direccion, 
+      telefono: cliente.data.data.telefono 
+    };
+  } catch (error) {
+    console.error(`Error al obtener datos del cliente ${id}:`, error);
+    return { id, nombre: "Desconocido", direccion: "Desconocido", telefono: "Desconocido" }; 
+  }
+}));
+       // const clientesMap = clientesData.reduce((acc, cliente) => ({ ...acc, [cliente.id]: cliente.nombre }), {});
+        const clientesMap = clientesData.reduce((acc, cliente) => ({
+  ...acc, 
+  [cliente.id]: { 
+    nombre: cliente.nombre, 
+    direccion: cliente.direccion, 
+    telefono: cliente.telefono 
+  } 
+}), {});
         setRemitos(remitosWithValidDates);
         setClientes(clientesMap);
       } catch (error) {
