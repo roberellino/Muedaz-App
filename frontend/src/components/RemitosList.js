@@ -51,29 +51,26 @@ const RemitosList = () => {
             return { id, nombre: "Desconocido" }; // Manejo de error para clientes
           }
         })); */
-        const clientesData = await Promise.all(clienteIds.map(async id => {
-  try {
-    const cliente = await axios.get(`${apiUrl}/api/clientes/${id}`);
-    return { 
-      id, 
-      nombre: cliente.data.data.nombre, 
-      direccion: cliente.data.data.direccion, 
-      telefono: cliente.data.data.telefono 
-    };
-  } catch (error) {
-    console.error(`Error al obtener datos del cliente ${id}:`, error);
-    return { id, nombre: "Desconocido", direccion: "Desconocido", telefono: "Desconocido" }; 
-  }
-}));
+       const clientesData = await Promise.all(clienteIds.map(async id => {
+        try {
+          const cliente = await axios.get(`${apiUrl}/api/clientes/${id}`);
+          // Asegúrate de obtener nombre, direccion y telefono
+          return { 
+            id, 
+            nombre: cliente.data.data.nombre, 
+            direccion: cliente.data.data.direccion, 
+            telefono: cliente.data.data.telefono 
+          };
+        } catch (error) {
+          console.error(`Error al obtener datos del cliente ${id}:`, error);
+          return { id, nombre: "Desconocido", direccion: "Desconocida", telefono: "Desconocido" };
+        }
+      }));
        // const clientesMap = clientesData.reduce((acc, cliente) => ({ ...acc, [cliente.id]: cliente.nombre }), {});
-        const clientesMap = clientesData.reduce((acc, cliente) => ({
-  ...acc, 
-  [cliente.id]: { 
-    nombre: cliente.nombre, 
-    direccion: cliente.direccion, 
-    telefono: cliente.telefono 
-  } 
-}), {});
+        const clientesMap = clientesData.reduce((acc, cliente) => ({ 
+        ...acc, 
+        [cliente.id]: cliente 
+      }), {});
         setRemitos(remitosWithValidDates);
         setClientes(clientesMap);
       } catch (error) {
@@ -132,10 +129,14 @@ const fechaFormatted = moment(remito.createdAt).format("DD/MM/YYYY");
   
  // doc.text(`${clientes[remito.cliente]}`, 15, 15);
   // Información del cliente (nombre, dirección y teléfono)
-  const clienteInfo = clientes[remito.cliente] || {};
-  doc.text(`Cliente: ${clienteInfo.nombre}`, 15, 15);
-  doc.text(`Teléfono: ${clienteInfo.telefono}`, 15, 25);
-  doc.text(`Dirección: ${clienteInfo.direccion}`, 15, 35);
+  const clienteInfo = clientes[remito.cliente];
+  if (clienteInfo) {
+    doc.text(`${clienteInfo.nombre}`, 15, 15);  // Nombre del cliente
+    doc.text(`${clienteInfo.direccion}`, 15, 25);  // Dirección del cliente
+    doc.text(`${clienteInfo.telefono}`, 15, 35);  // Teléfono del cliente
+  } else {
+    doc.text("Cliente no encontrado", 15, 15);
+  }
   
   doc.text(`${fechaFormatted}`, 180, 15, { align: 'right' });
 
