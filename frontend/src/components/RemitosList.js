@@ -160,6 +160,14 @@ const fechaFormatted = moment(remito.createdAt).format("DD/MM/YYYY");
 };
 
   const handlePrintAll = () => {
+    
+    const productoDetails = await Promise.all(remito.productos.map(async (item) => {
+    const details = await fetchProductoDetails(item.producto);
+    return {
+      ...item,
+      productoDetails: details,
+    };
+  }));
     const doc = new jsPDF();
 
     filteredRemitos.forEach((remito, index) => {
