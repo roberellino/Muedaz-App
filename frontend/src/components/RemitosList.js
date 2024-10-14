@@ -109,7 +109,13 @@ const fechaFormatted = moment(remito.createdAt).format("DD/MM/YYYY");
 // Reducir el tamaño de fuente para el texto principal
     doc.setFontSize(14);
   
-  doc.text(`${clientes[remito.cliente]}`, 15, 15);
+ // doc.text(`${clientes[remito.cliente]}`, 15, 15);
+  // Información del cliente (nombre, dirección y teléfono)
+  const clienteInfo = clientes[remito.cliente] || {};
+  doc.text(`Cliente: ${clienteInfo.nombre}`, 15, 15);
+  doc.text(`Teléfono: ${clienteInfo.telefono}`, 15, 25);
+  doc.text(`Dirección: ${clienteInfo.direccion}`, 15, 35);
+  
   doc.text(`${fechaFormatted}`, 180, 15, { align: 'right' });
 
   
@@ -124,7 +130,7 @@ const fechaFormatted = moment(remito.createdAt).format("DD/MM/YYYY");
  doc.autoTable({
       head: [["Producto", "Cantidad", "Precio Unitario", "Total"]],
       body: productos,
-      startY: 25,
+      startY: 45,
       theme: 'grid',
       headStyles: {
         fillColor: [255, 255, 255], // Fondo blanco para el encabezado
