@@ -51,7 +51,7 @@ const RemitosList = () => {
             return { id, nombre: "Desconocido" }; // Manejo de error para clientes
           }
         }));
-       const clientesMap = clientesData.reduce((acc, cliente) => ({ ...acc, [cliente.id]: cliente.nombre, [cliente.id]: cliente.direccion }), {});
+       const clientesMap = clientesData.reduce((acc, cliente) => ({ ...acc, [cliente.id]: cliente.nombre}), {});
        
         setRemitos(remitosWithValidDates);
         setClientes(clientesMap);
