@@ -166,13 +166,15 @@ const handlePrintAll = async () => {
     const remito = filteredRemitos[index];
 
     // Obtener detalles de los productos para cada remito
-    const productoDetails = await Promise.all(remito.productos.map(async (item) => {
-      const details = await fetchProductoDetails(item.producto);
-      return {
-        ...item,
-        productoDetails: details,
-      };
-    }));
+    const productoDetails = await Promise.all(
+      remito.productos.map(async (item) => {
+        const details = await fetchProductoDetails(item.producto);
+        return {
+          ...item,
+          productoDetails: details,
+        };
+      })
+    );
 
     const fechaFormatted = moment(remito.createdAt).format("DD/MM/YYYY");
 
