@@ -97,7 +97,6 @@ const fetchProductoDetails = async (productoId) => {
 
 const handlePrint = async (remito) => {
   
-const fechaFormatted = moment(remito.createdAt).format("DD/MM/YYYY");
   const productoDetails = await Promise.all(remito.productos.map(async (item) => {
     const details = await fetchProductoDetails(item.producto);
     return {
@@ -106,6 +105,10 @@ const fechaFormatted = moment(remito.createdAt).format("DD/MM/YYYY");
     };
   }));
 const doc = new jsPDF();
+const fechaFormatted = moment(remito.createdAt).format("DD/MM/YYYY");
+// Reducir el tamaño de fuente para el texto principal
+    doc.setFontSize(10);
+  
   doc.text(`${clientes[remito.cliente]}`, 10, 15);
   doc.text(`${fechaFormatted}`, 180, 15, { align: 'right' });
 
