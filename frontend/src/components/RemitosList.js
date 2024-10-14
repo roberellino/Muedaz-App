@@ -159,38 +159,40 @@ const fechaFormatted = moment(remito.createdAt).format("DD/MM/YYYY");
   doc.save(`remito_${remito.id}.pdf`);
 };
 
-  const handlePrintAll = () => {
-    
+const handlePrintAll = async () => {
+  const doc = new jsPDF();
+
+  for (let index = 0; index < filteredRemitos.length; index++) {
+    const remito = filteredRemitos[index];
+
+    // Obtener detalles de los productos para cada remito
     const productoDetails = await Promise.all(remito.productos.map(async (item) => {
-    const details = await fetchProductoDetails(item.producto);
-    return {
-      ...item,
-      productoDetails: details,
-    };
-  }));
-    const doc = new jsPDF();
+      const details = await fetchProductoDetails(item.producto);
+      return {
+        ...item,
+        productoDetails: details,
+      };
+    }));
 
-    filteredRemitos.forEach((remito, index) => {
-      const fechaFormatted = moment(remito.createdAt).format("DD/MM/YYYY");
+    const fechaFormatted = moment(remito.createdAt).format("DD/MM/YYYY");
 
-      doc.setFontSize(14);
-      const clienteData = clientes[remito.cliente] || { nombre: "Desconocido", direccion: "Desconocida", telefono: "Desconocido" };
-  doc.text(`${clienteData.nombre} (${clienteData.idCliente})`, 15, 15);
-  doc.text(`${clienteData.direccion}`, 15, 25);
-  doc.text(`${clienteData.telefono}`, 15, 35);
-  
-  doc.text(`${fechaFormatted}`, 180, 15, { align: 'right' });
+    doc.setFontSize(14);
+    const clienteData = clientes[remito.cliente] || { nombre: "Desconocido", direccion: "Desconocida", telefono: "Desconocido" };
+    doc.text(`${clienteData.nombre} (${clienteData.idCliente})`, 15, 15);
+    doc.text(`${clienteData.direccion}`, 15, 25);
+    doc.text(`${clienteData.telefono}`, 15, 35);
 
-  
- const productos = productoDetails.map((item) => [
-    item.productoDetails?.nombre || "Nombre no encontrado",
-    item.cantidad || 0,
-    item.productoDetails?.precio || 0,
-    item.cantidad * (item.productoDetails?.precio || 0),
-  ]);
+    doc.text(`${fechaFormatted}`, 180, 15, { align: 'right' });
 
-   // Tabla con estilo reducido
- doc.autoTable({
+    const productos = productoDetails.map((item) => [
+      item.productoDetails?.nombre || "Nombre no encontrado",
+      item.cantidad || 0,
+      item.productoDetails?.precio || 0,
+      item.cantidad * (item.productoDetails?.precio || 0),
+    ]);
+
+    // Tabla con los productos
+    doc.autoTable({
       head: [["Producto", "Cantidad", "Precio Unitario", "Total"]],
       body: productos,
       startY: 45,
@@ -202,22 +204,24 @@ const fechaFormatted = moment(remito.createdAt).format("DD/MM/YYYY");
         lineColor: [0, 0, 0]        // Líneas negras
       },
       bodyStyles: {
-        //fillColor: [255, 255, 255], // Fondo blanco para el cuerpo
         textColor: [0, 0, 0],       // Texto negro
         lineWidth: 0.1,             // Líneas delgadas
         lineColor: [0, 0, 0]        // Líneas negras
       },
     });
-  doc.setFontSize(14); // Aseguramos que el total tenga un tamaño adecuado
-  doc.text(`Total: $${remito.total}`, 150, doc.previousAutoTable.finalY + 10);
 
-      if (index < filteredRemitos.length - 1) {
-        doc.addPage();
-      }
-    });
+    doc.setFontSize(14);
+    doc.text(`Total: $${remito.total}`, 150, doc.previousAutoTable.finalY + 10);
 
-    doc.save("todos_los_remitos.pdf");
-  };
+    // Si no es el último remito, añadir una nueva página
+    if (index < filteredRemitos.length - 1) {
+      doc.addPage();
+    }
+  }
+
+  doc.save("todos_los_remitos.pdf");
+};
+
 
   const handleDelete = async (id) => {
     if (window.confirm("¿Estás seguro de que deseas eliminar este remito?")) {
