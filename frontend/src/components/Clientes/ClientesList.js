@@ -26,7 +26,10 @@ const ClientesList = () => {
                     q: busqueda // 'busqueda' es el estado donde guardas el término de búsqueda en tu componente React
                 }
             });
-            setClientes(result.data);
+          // Ordenamos los clientes por idCliente de manera ascendente
+      const sortedClientes = result.data.sort((a, b) => a.idCliente - b.idCliente);
+      // Actualizamos el estado con los clientes ordenados
+      setClientes(sortedClientes);
         } catch (error) {
             console.error("Error al obtener clientes:", error);
         }
