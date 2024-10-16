@@ -27,7 +27,10 @@ const ProductosList = () => {
                         q: busqueda // 'busqueda' es el estado donde guardas el término de búsqueda en tu componente React
                     }
                 });
-                setProductos(result.data);
+                // Ordenamos los clientes por idCliente de manera ascendente
+            const sortedProductos = result.data.sort((a, b) => a.identificador - b.identificador);
+            // Actualizamos el estado con los clientes ordenados
+            setProductos(sortedProductos);
             } catch (error) {
                 console.error("Error al obtener productos:", error);
             }
